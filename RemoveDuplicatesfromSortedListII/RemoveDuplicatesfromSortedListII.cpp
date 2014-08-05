@@ -59,9 +59,48 @@ public:
         if (head==NULL || head->next==NULL)
             return head;
 
+        ListNode *pDummyHead = new ListNode(0);
+        pDummyHead->next = head;
 
-
-        return head;
+        ListNode *pNewHead = head;
+        ListNode *p = head;
+        ListNode *pLast = pDummyHead;
+        
+        bool bFoundHead = false;
+        while (p->next)
+        {
+            int nLastValue = p->val;
+            ListNode *pSub = p->next;
+            if (p->val != pSub->val)
+            {
+                if (bFoundHead==false)
+                {
+                    bFoundHead=true;
+                    pNewHead = p;
+                }
+                pLast = p;
+                p = p->next;
+                continue;
+            }
+            while (pSub && (pSub->val == nLastValue))
+            {
+                ListNode *pToDelete = pSub;
+                pSub = pSub->next;
+                delete pToDelete;
+            }
+            ListNode *pToDelete = p;
+            p = pSub;
+            delete pToDelete;
+            pLast->next = pSub;
+            if (p==NULL)
+                break;
+        }
+        if (bFoundHead==false)
+        {
+            pNewHead = p;
+        }
+        delete pDummyHead;
+        return pNewHead;
     }
 };
 
